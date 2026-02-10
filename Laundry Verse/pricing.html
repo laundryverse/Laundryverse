@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laundryverse | Rate Card</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = { 
+            theme: { 
+                extend: { 
+                    colors: { brand: { dark: '#006B6B', light: '#E0F2F2', accent: '#00E0C6', gps: '#2ECC71' } }, 
+                    fontFamily: { display: ['Space Grotesk', 'sans-serif'], sans: ['Inter', 'sans-serif'] }
+                } 
+            } 
+        }
+
+        function appData() {
+            return {
+                // --- EXISTING PAGE LOGIC ---
+                storeSelected: false,
+                loadingLocation: false,
+                currentStore: '',
+                
+                detectLocation() {
+                    this.loadingLocation = true;
+                    setTimeout(() => {
+                        this.loadingLocation = false;
+                        this.storeSelected = true;
+                        this.currentStore = 'Scheme No 54, Indore';
+                        setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 100);
+                    }, 1500);
+                },
+
+                // --- NEW BOOKING LOGIC ---
+                bookingModal: false,
+                booking: {
+                    name: '',
+                    service: 'Wash & Fold (₹99/kg)',
+                    delivery: 'Normal Delivery (24-48hrs)',
+                    address: '',
+                    gpsLoading: false
+                },
+
+                getGPS() {
+                    this.booking.gpsLoading = true;
+                    if (navigator.geolocation) {
+                        navigator.geolocation.getCurrentPosition((position) => {
+                            const lat = position.coords.latitude;
+                            const long = position.coords.longitude;
+                            const mapsLink = `https://www.google.com/maps?q=${lat},${long}`;
+                            this.booking.address = mapsLink;
+                            this.booking.gpsLoading = false;
+                        }, (error) => {
+                            alert('Location access denied. Please type address manually.');
+                            this.booking.gpsLoading = false;
+                        });
+                    } else {
+                        alert('GPS not supported.');
+                        this.booking.gpsLoading = false;
+                    }
+                },
+
+                sendBooking() {
+                    if(!this.booking.name || !this.booking.address) {
+                        alert("Please fill in your name and address.");
+                        return;
+                    }
+                    const msg = `*New Booking Request* 🧺\n\n` +
+                                `👤 *Name:* ${this.booking.name}\n` +
+                                `🛠 *Service:* ${this.booking.service}\n` +
+                                `🚀 *Delivery:* ${this.booking.delivery}\n` +
+                                `📍 *Address:* ${this.booking.address}`;
+                    
+                    const encodedMsg = encodeURIComponent(msg);
+                    window.open(`https://wa.me/917389327066?text=${encodedMsg}`, '_blank');
+                    this.bookingModal = false;
+                },
+
+                // --- DATA ---
+                rawItems: [
+                    // --- MENS WEAR ---
+                    { name: 'Shirt', cat: 'Men', icon: '👔', variants: {'Cotton': [89, 15, 30], 'Silk': [109, 15, 30], 'Kids': [70, 15, 30]} },
+                    { name: 'T-Shirt', cat: 'Men', icon: '👕', variants: {'Cotton': [79, 10, 30], 'Long Slv': [79, 10, 30], 'Kids': [70, 10, 30]} },
+                    { name: 'Jeans/Trouser', cat: 'Men', icon: '👖', variants: {'Jeans': [99, 15, 0], 'Formal': [89, 15, 30], 'Casual': [89, 15, 30], 'Track': [89, 15, 0], 'Kids': [79, 15, 0]} },
+                    { name: 'Jacket/Blazer', cat: 'Men', icon: '🧥', variants: {'Formal': [250, 50, 0], 'Casual': [250, 50, 0], 'Cotton': [199, 50, 50], 'Rexine': [350, 70, 0], 'Leather': [500, 100, 0], 'Kids': [200, 40, 0]} },
+                    { name: 'Luxury Jacket', cat: 'Men', icon: '🕴️', variants: {'Full': [900, 0, 0], 'Half': [600, 0, 0]} },
+                    { name: 'Sherwani', cat: 'Men', icon: '🤴', variants: {'Wedding': [899, 150, 0], 'Silk': [699, 100, 100], 'Linen': [599, 80, 100], 'Cotton': [399, 80, 100], 'Kids': [450, 70, 0]} },
+                    { name: 'Kurta', cat: 'Men', icon: '🕉️', variants: {'Cotton': [89, 15, 40], 'Linen': [99, 15, 40], 'Silk': [129, 40, 40], 'Fancy': [169, 20, 40], 'Kids': [70, 10, 30]} },
+                    { name: 'Waistcoat', cat: 'Men', icon: '🤵', variants: {'Formal': [179, 40, 40], 'Nehru': [209, 40, 40], 'Rexine': [349, 50, 0], 'Leather': [499, 100, 0], 'Cotton': [150, 40, 40], 'Kids': [100, 30, 40]} },
+                    { name: 'Sweater', cat: 'Men', icon: '🧶', variants: {'Wool': [200, 40, 0], 'Cardigan': [180, 30, 0], 'Kids': [130, 30, 0]} },
+                    { name: 'Overcoat', cat: 'Men', icon: '🧥', variants: {'Overcoat': [699, 100, 0]} },
+                    { name: 'Shorts', cat: 'Men', icon: '🩳', variants: {'Cotton': [60, 10, 0], 'Kids': [45, 10, 0]} },
+                    { name: 'Dhoti/Lungi', cat: 'Men', icon: '🧖', variants: {'Cotton': [80, 15, 40], 'Silk': [100, 25, 40], 'Kids': [60, 15, 30]} },
+                    { name: 'Undergarments', cat: 'Men', icon: '🩲', variants: {'Std': [40, 5, 0], 'Vest': [45, 10, 0], 'Socks': [25, 0, 0]} },
+                    { name: 'Accessories', cat: 'Men', icon: '🧣', variants: {'Tie': [50, 10, 0], 'Handkerchief': [15, 5, 0], 'Cap': [150, 0, 0], 'Belt': [50, 0, 0]} },
+
+                    // --- WOMEN'S WEAR ---
+                    { name: 'Saree', cat: 'Women', icon: '👘', variants: {'Cotton': [199, 50, 80], 'Silk': [250, 60, 90], 'Wedding': [399, 70, 100], 'Bridal': [550, 0, 0], 'Heavy Bridal': [850, 0, 0], 'Kids': [150, 60, 60]} },
+                    { name: 'Lehenga', cat: 'Women', icon: '💃', variants: {'Cotton': [299, 60, 50], 'Silk': [599, 100, 150], 'Wedding': [999, 200, 400], 'Kids': [300, 50, 50]} },
+                    { name: 'Gown/Anarkali', cat: 'Women', icon: '👗', variants: {'Silk': [409, 150, 0], 'Wedding': [899, 250, 0], 'Kids': [300, 80, 0]} },
+                    { name: 'Kurti/Top', cat: 'Women', icon: '👚', variants: {'Cotton': [90, 20, 40], 'Silk': [120, 30, 40], 'Kids': [139, 30, 30]} },
+                    { name: 'Dress', cat: 'Women', icon: '👗', variants: {'Cotton': [159, 30, 40], 'Silk': [229, 40, 40], 'Party': [329, 50, 0], 'Kids': [129, 20, 40]} },
+                    { name: 'Blouse/Choli', cat: 'Women', icon: '👚', variants: {'Cotton': [70, 10, 20], 'Silk': [110, 20, 30], 'Wedding': [199, 30, 30], 'Kids': [70, 10, 20]} },
+                    { name: 'Dupatta', cat: 'Women', icon: '🧣', variants: {'Cotton': [60, 20, 20], 'Silk': [100, 30, 20], 'Wedding': [150, 50, 0], 'Kids': [60, 20, 20]} },
+                    { name: 'Shawl/Stole', cat: 'Women', icon: '🧣', variants: {'Cotton': [99, 20, 0], 'Wool': [200, 30, 0]} },
+                    { name: 'Skirt', cat: 'Women', icon: '🩰', variants: {'Cotton': [90, 20, 40], 'Formal': [130, 30, 40], 'Kids': [70, 10, 30]} },
+                    { name: 'Salwar/Patiala', cat: 'Women', icon: '👖', variants: {'Cotton': [79, 10, 30], 'Silk': [100, 20, 40], 'Kids': [79, 10, 30]} },
+                    { name: 'Burkha', cat: 'Women', icon: '🧕', variants: {'Cotton': [120, 25, 0], 'Silk': [150, 25, 0], 'Kids': [100, 25, 0]} },
+                    { name: 'Kameez', cat: 'Women', icon: '👚', variants: {'Cotton': [90, 20, 40], 'Silk': [150, 30, 40], 'Fancy': [170, 30, 40], 'Kids': [229, 10, 40]} },
+                    { name: 'Petticoat', cat: 'Women', icon: '👗', variants: {'Cotton': [45, 10, 30], 'Silk': [90, 20, 30]} },
+                    { name: 'Frock', cat: 'Women', icon: '👗', variants: {'Light': [150, 20, 0], 'Heavy': [350, 30, 0]} },
+
+                    // --- HOME & HOUSEHOLD ---
+                    { name: 'Curtains', cat: 'Home', icon: '🪟', variants: {
+                        'Window': [110, 35, 0], 'Door': [150, 35, 0], 'Sheer Full': [400, 50, 0], 'Sheer Half': [350, 35, 0], 
+                        'Lining Full': [600, 50, 0], 'Lining Half': [180, 35, 0], 'Roll Down': [150, 0, 0], 'Blind': [200, 0, 0]} 
+                    },
+                    { name: 'Blanket', cat: 'Home', icon: '🛌', variants: {'Double': [400, 0, 0], 'Single': [300, 0, 0], 'XT-Dbl': [450, 0, 0]} },
+                    { name: 'Quilt/Comforter', cat: 'Home', icon: '🛏️', variants: {'Double': [400, 0, 0], 'Single': [300, 0, 0], 'XT-Dbl': [600, 0, 0]} },
+                    { name: 'Quilt Cover', cat: 'Home', icon: '🛏️', variants: {'Double': [250, 60, 0], 'Single': [150, 40, 0], 'XT-Dbl': [300, 60, 0]} },
+                    { name: 'Bedsheet', cat: 'Home', icon: '🛏️', variants: {'Double': [199, 35, 0], 'Single': [159, 35, 0]} },
+                    { name: 'Bedspread', cat: 'Home', icon: '🛏️', variants: {'Double': [200, 40, 0], 'Single': [140, 40, 0]} },
+                    { name: 'Carpet', cat: 'Home', icon: '🧶', variants: {'Small (4ft)': [499, 0, 0], 'Medium (8ft)': [799, 0, 0], 'Large (10ft)': [1299, 0, 0]} },
+                    { name: 'Sofa Cover', cat: 'Home', icon: '🛋️', variants: {'Small': [100, 0, 0], 'Medium': [200, 0, 0], 'Large': [300, 0, 0]} },
+                    { name: 'Pillow/Cushion', cat: 'Home', icon: '☁️', variants: {'Small': [109, 0, 0], 'Large': [299, 0, 0], 'Cover Sm': [40, 10, 0], 'Cover Lg': [60, 10, 0]} },
+                    { name: 'Table Cloth', cat: 'Home', icon: '🍽️', variants: {'Small': [60, 0, 0], 'Large': [100, 0, 0]} },
+                    { name: 'Bath', cat: 'Home', icon: '🛁', variants: {'Towel': [80, 0, 0], 'Bathrobe': [140, 50, 0]} },
+
+                    // --- ACCESSORIES & KIDS ---
+                    { name: 'Shoes', cat: 'Acc', icon: '👟', variants: {'Sports': [250, 0, 0], 'Leather': [499, 0, 0], 'Suede': [400, 0, 0], 'Heels': [300, 0, 0], 'Boots': [800, 0, 0], 'Sandal': [150, 0, 0]} },
+                    { name: 'Bag/Luggage', cat: 'Acc', icon: '🎒', variants: {'Backpack': [400, 0, 0], 'Trolley S': [300, 0, 0], 'Trolley M': [450, 0, 0], 'Trolley L': [600, 0, 0]} },
+                    { name: 'Purse', cat: 'Acc', icon: '👜', variants: {'Wallet': [80, 0, 0], 'Small': [150, 0, 0], 'Medium': [250, 0, 0], 'Large': [350, 0, 0]} },
+                    { name: 'Stroller/Pram', cat: 'Kids', icon: '🛒', variants: {'Pram': [200, 0, 0], 'Stroller Sm': [250, 0, 0], 'Stroller Dbl': [650, 0, 0]} },
+                    { name: 'Soft Toy', cat: 'Kids', icon: '🧸', variants: {'Small': [299, 0, 0], 'Medium': [699, 0, 0], 'Large': [1199, 0, 0]} },
+                    { name: 'Helmet', cat: 'Acc', icon: '⛑️', variants: {'Std': [200, 0, 0], 'Full': [300, 0, 0]} },
+                    { name: 'Leather Gear', cat: 'Acc', icon: '🧤', variants: {'Gloves': [100, 0, 0], 'Belt': [100, 0, 0], 'Cap': [120, 0, 0]} }
+                ],
+
+                get groupedItems() {
+                    return this.rawItems.sort((a, b) => a.name.localeCompare(b.name))
+                        .reduce((groups, item) => {
+                            const letter = item.name[0].toUpperCase();
+                            if (!groups[letter]) groups[letter] = [];
+                            groups[letter].push(item);
+                            return groups;
+                        }, {});
+                }
+            }
+        }
+    </script>
+
+    <style>
+        .glass { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(0,0,0,0.05); }
+        .tab-active { background-color: #1F2937; color: white; border-color: #1F2937; }
+        .tab-inactive { background-color: #F9FAFB; color: #374151; border: 1px solid #E5E7EB; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        [x-cloak] { display: none !important; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-900 font-sans" x-data="appData()">
+
+    <div x-show="!storeSelected" class="fixed inset-0 z-[100] flex items-end sm:items-center justify-center p-4 sm:p-0">
+        <div class="fixed inset-0 bg-slate-900/80 backdrop-blur-sm transition-opacity"></div>
+        <div class="relative bg-white rounded-t-3xl sm:rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden transform transition-all">
+            <div class="p-8">
+                <h2 class="text-2xl font-display font-bold text-slate-900 mb-2">Select nearest store</h2>
+                <p class="text-slate-500 text-sm mb-8">Prices vary by location. Please select your area.</p>
+                <div class="flex flex-col gap-4">
+                    <div class="relative">
+                        <span class="absolute left-4 top-3.5 text-slate-400">🔍</span>
+                        <input type="text" placeholder="Enter city, area, street..." class="w-full pl-12 pr-4 py-4 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-dark outline-none font-medium">
+                    </div>
+                    <div class="flex items-center gap-3 my-2">
+                        <div class="h-px bg-slate-200 flex-1"></div>
+                        <span class="text-xs text-slate-400 font-bold uppercase">OR</span>
+                        <div class="h-px bg-slate-200 flex-1"></div>
+                    </div>
+                    <button @click="detectLocation()" class="w-full bg-[#2ECC71] hover:bg-green-500 text-white font-bold py-4 rounded-xl flex items-center justify-center gap-3 transition-all shadow-lg shadow-green-500/20 active:scale-95">
+                        <span x-show="!loadingLocation">📍 DETECT USING GPS</span>
+                        <span x-show="loadingLocation" class="flex items-center gap-2">Locating...</span>
+                    </button>
+                </div>
+            </div>
+            <div class="bg-slate-50 p-4 text-center border-t border-slate-100">
+                <p class="text-xs text-slate-400">We need your location to show accurate rates.</p>
+            </div>
+        </div>
+    </div>
+
+    <nav class="fixed w-full z-40 top-0 bg-white/95 backdrop-blur border-b border-slate-100 h-32 flex items-center shadow-sm">
+        <div class="max-w-7xl mx-auto px-6 w-full flex justify-between items-center">
+            <a href="index.html" class="flex items-center">
+                <img src="logo.png" alt="Laundryverse Logo" class="h-28 w-auto object-contain hover:scale-105 transition-transform">
+            </a>
+            <div class="hidden md:flex gap-8 font-semibold text-slate-600 items-center">
+                <a href="index.html" class="hover:text-brand-dark">Home</a>
+                <a href="services.html" class="hover:text-brand-dark">Services</a>
+                <a href="pricing.html" class="text-brand-dark">Pricing</a>
+            </div>
+            <button @click="bookingModal = true" class="bg-brand-dark text-white px-5 py-2 rounded-full text-xs font-bold hover:bg-teal-800 uppercase tracking-wide">Book Now</button>
+        </div>
+    </nav>
+
+    <div x-show="storeSelected" x-transition.opacity class="fixed top-32 left-0 w-full z-30 bg-brand-dark text-white shadow-md">
+        <div class="max-w-5xl mx-auto px-4 py-2 flex justify-between items-center">
+            <div class="flex items-center gap-2 text-sm font-medium">
+                <span>📍</span>
+                <span x-text="currentStore"></span>
+                <span class="bg-white/20 text-[10px] px-2 py-0.5 rounded ml-2">452010</span>
+            </div>
+            <button @click="storeSelected = false" class="text-xs font-bold underline hover:text-teal-200">Change</button>
+        </div>
+    </div>
+
+    <div x-show="storeSelected" x-transition.opacity class="fixed top-40 left-0 w-full z-20 bg-white border-b border-slate-200 shadow-sm">
+        <div class="max-w-5xl mx-auto px-4 py-3 flex gap-2 overflow-x-auto no-scrollbar items-center">
+            <span class="text-xs font-bold text-brand-dark uppercase mr-2 shrink-0">Jump To:</span>
+            <template x-for="letter in Object.keys(groupedItems)" :key="letter">
+                <a :href="'#' + letter" 
+                   class="w-8 h-8 flex items-center justify-center rounded-full bg-slate-100 text-xs font-bold text-slate-600 hover:bg-brand-dark hover:text-white transition-all shrink-0"
+                   x-text="letter">
+                </a>
+            </template>
+        </div>
+    </div>
+
+    <div class="pt-60 pb-20 max-w-4xl mx-auto px-4 min-h-screen" x-show="storeSelected" x-transition.opacity.duration.500ms>
+        
+        <div class="bg-brand-dark text-white rounded-2xl shadow-lg p-6 mb-12 relative overflow-hidden group">
+            <div class="absolute -right-6 -top-6 w-32 h-32 bg-white/10 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-700"></div>
+            <div class="relative z-10 flex justify-between items-center mb-6">
+                <div>
+                    <h3 class="text-2xl font-bold">Laundry By Weight</h3>
+                    <p class="text-teal-100 text-sm mt-1">Daily wear (Wash, Dry & Fold)</p>
+                </div>
+            </div>
+            <div class="grid grid-cols-3 gap-4">
+                <div class="bg-white/10 rounded-xl p-4 text-center backdrop-blur-md border border-white/10">
+                    <p class="text-[10px] uppercase tracking-wider opacity-70 font-bold mb-1">Wash & Fold</p>
+                    <p class="text-2xl font-display font-bold">₹99</p>
+                </div>
+                <div class="bg-white/10 rounded-xl p-4 text-center backdrop-blur-md border border-teal-400 relative overflow-hidden">
+                    <div class="absolute top-0 right-0 bg-teal-400 text-[8px] font-bold text-brand-dark px-1.5">POPULAR</div>
+                    <p class="text-[10px] uppercase tracking-wider opacity-70 font-bold mb-1">Wash & Iron</p>
+                    <p class="text-2xl font-display font-bold">₹119</p>
+                </div>
+                <div class="bg-white/10 rounded-xl p-4 text-center backdrop-blur-md border border-white/10">
+                    <p class="text-[10px] uppercase tracking-wider opacity-70 font-bold mb-1">Premium Laundry</p>
+                    <p class="text-2xl font-display font-bold">₹189</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="space-y-12">
+            <template x-for="letter in Object.keys(groupedItems)" :key="letter">
+                <div :id="letter" class="scroll-mt-48">
+                    <div class="flex items-center gap-4 mb-6">
+                        <span class="text-4xl font-display font-bold text-slate-200" x-text="letter"></span>
+                        <div class="h-px bg-slate-200 flex-1"></div>
+                    </div>
+
+                    <div class="grid gap-6">
+                        <template x-for="item in groupedItems[letter]" :key="item.name">
+                            <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 flex flex-col sm:flex-row gap-6 relative group hover:shadow-md transition-shadow" 
+                                 x-data="{ selected: Object.keys(item.variants)[0] }">
+                                
+                                <div class="flex-1">
+                                    <div class="flex justify-between items-start mb-4">
+                                        <h3 class="text-lg font-bold text-slate-900 group-hover:text-brand-dark transition-colors" x-text="item.name"></h3>
+                                        <span class="text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded bg-slate-50 text-slate-400 border border-slate-100" x-text="item.cat"></span>
+                                    </div>
+
+                                    <div class="flex flex-wrap gap-2 mb-5">
+                                        <template x-for="(price, variant) in item.variants" :key="variant">
+                                            <button @click="selected = variant"
+                                                    class="px-3 py-1.5 rounded-lg text-xs font-bold transition-all border"
+                                                    :class="selected === variant ? 'tab-active' : 'tab-inactive'"
+                                                    x-text="variant">
+                                            </button>
+                                        </template>
+                                    </div>
+
+                                    <div class="grid grid-cols-3 gap-2">
+                                        <div class="bg-slate-50 rounded-lg p-2 border border-slate-100">
+                                            <p class="text-[10px] font-bold text-slate-400 uppercase">Dry Clean</p>
+                                            <p class="text-lg font-bold text-brand-dark">₹<span x-text="item.variants[selected][0]"></span></p>
+                                        </div>
+                                        
+                                        <div class="bg-slate-50 rounded-lg p-2 border border-slate-100" x-show="item.variants[selected][1] > 0">
+                                            <p class="text-[10px] font-bold text-slate-400 uppercase">Steam</p>
+                                            <p class="text-base font-semibold text-slate-600">₹<span x-text="item.variants[selected][1]"></span></p>
+                                        </div>
+                                        
+                                        <div class="bg-slate-50 rounded-lg p-2 border border-slate-100" x-show="item.variants[selected][2] > 0">
+                                            <p class="text-[10px] font-bold text-slate-400 uppercase">Starch</p>
+                                            <p class="text-base font-semibold text-slate-600">₹<span x-text="item.variants[selected][2]"></span></p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="hidden sm:flex w-20 h-20 bg-brand-light/30 rounded-2xl items-center justify-center text-4xl group-hover:scale-110 transition-transform" x-text="item.icon"></div>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+            </template>
+        </div>
+        
+        <div class="h-20"></div>
+    </div>
+
+    <div x-show="bookingModal" class="fixed inset-0 z-[60] flex items-center justify-center px-4" style="display: none;">
+        <div class="fixed inset-0 bg-slate-900/90 backdrop-blur-md transition-opacity" @click="bookingModal = false"></div>
+        <div class="bg-white w-full max-w-md p-8 rounded-3xl relative z-10 shadow-2xl scale-100 transition-transform">
+            
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="font-display font-bold text-2xl text-slate-900">Schedule Pickup</h3>
+                <button @click="bookingModal = false" class="text-slate-400 hover:text-slate-900 text-2xl">×</button>
+            </div>
+            
+            <form @submit.prevent="sendBooking" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Your Name</label>
+                    <input type="text" x-model="booking.name" placeholder="John Doe" class="w-full border border-slate-200 bg-slate-50 p-3 rounded-xl focus:ring-2 focus:ring-brand-dark outline-none font-medium" required>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Service Type</label>
+                    <div class="relative">
+                        <select x-model="booking.service" class="w-full border border-slate-200 bg-slate-50 p-3 rounded-xl focus:ring-2 focus:ring-brand-dark outline-none appearance-none font-medium text-slate-700">
+                            <optgroup label="Daily Laundry">
+                                <option>Wash & Fold (₹99/kg)</option>
+                                <option>Wash & Iron (₹119/kg)</option>
+                                <option>Premium Laundry (₹189/kg)</option>
+                            </optgroup>
+                            <optgroup label="Garment Care">
+                                <option>Dry Cleaning</option>
+                                <option>Steam Press</option>
+                                <option>Raffu (Darning)</option>
+                                <option>Dyeing Service</option>
+                            </optgroup>
+                            <optgroup label="Home & Cleaning">
+                                <option>Sofa Cleaning</option>
+                                <option>Carpet Cleaning</option>
+                                <option>Curtain Cleaning</option>
+                                <option>Water Tank Cleaning</option>
+                            </optgroup>
+                            <optgroup label="Accessories">
+                                <option>Shoe Spa</option>
+                                <option>Bag Repair/Cleaning</option>
+                                <option>Soft Toys</option>
+                            </optgroup>
+                        </select>
+                        <div class="absolute right-4 top-3.5 pointer-events-none text-slate-400">▼</div>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Delivery Speed</label>
+                    <div class="relative">
+                        <select x-model="booking.delivery" class="w-full border border-slate-200 bg-slate-50 p-3 rounded-xl focus:ring-2 focus:ring-brand-dark outline-none appearance-none font-medium text-slate-700">
+                            <option>Normal Delivery (24-48hrs)</option>
+                            <option>Next Day Delivery (Extra Charge)</option>
+                            <option>Same Day Delivery (Extra Charge)</option>
+                        </select>
+                        <div class="absolute right-4 top-3.5 pointer-events-none text-slate-400">▼</div>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Pickup Address</label>
+                    <div class="relative">
+                        <textarea x-model="booking.address" placeholder="Type address OR click 'Detect GPS' below..." class="w-full border border-slate-200 bg-slate-50 p-3 rounded-xl focus:ring-2 focus:ring-brand-dark outline-none h-24 resize-none text-sm" required></textarea>
+                        <button type="button" @click="getGPS()" class="absolute bottom-2 right-2 bg-brand-light text-brand-dark hover:bg-brand-dark hover:text-white px-3 py-1.5 rounded-lg text-xs font-bold transition-colors flex items-center gap-1 border border-brand-dark/20">
+                            <span x-show="!booking.gpsLoading">📍 Detect GPS</span>
+                            <span x-show="booking.gpsLoading">Locating...</span>
+                        </button>
+                    </div>
+                </div>
+                <button type="submit" class="w-full bg-[#25D366] text-white py-4 rounded-xl font-bold text-lg hover:brightness-110 transition-all flex items-center justify-center gap-2 shadow-lg active:scale-95">
+                    <span>Confirm via WhatsApp</span>
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654z"/></svg>
+                </button>
+            </form>
+        </div>
+    </div>
+
+</body>
+</html>

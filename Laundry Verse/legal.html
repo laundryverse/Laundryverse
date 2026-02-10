@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Laundryverse | Policies</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = { theme: { extend: { colors: { brand: { dark: '#006B6B', light: '#E0F2F2' } }, fontFamily: { display: ['Space Grotesk', 'sans-serif'], sans: ['Inter', 'sans-serif'] } } } }
+    </script>
+</head>
+<body class="bg-slate-50 text-slate-800">
+
+   <nav class="fixed w-full z-40 top-0 bg-white/95 backdrop-blur border-b border-slate-100 h-20 flex items-center shadow-sm">
+    <div class="max-w-7xl mx-auto px-6 w-full flex justify-between items-center">
+        
+        <a href="index.html" class="flex items-center gap-2 font-bold text-2xl tracking-tight text-[#006B6B]">
+            <div class="w-10 h-10 bg-[#006B6B] text-white rounded-full flex items-center justify-center">L</div> 
+            Laundryverse
+        </a>
+        
+        <div class="hidden md:flex gap-8 font-semibold text-slate-600 items-center">
+            <a href="index.html" class="hover:text-[#006B6B] transition-colors">Home</a>
+            <a href="services.html" class="hover:text-[#006B6B] transition-colors">Services</a>
+            <a href="pricing.html" class="hover:text-[#006B6B] transition-colors">Pricing</a>
+            <a href="track.html" class="hover:text-[#006B6B] transition-colors">Track Order</a>
+            <a href="franchise.html" class="hover:text-[#006B6B] transition-colors">Franchise</a>
+        </div>
+
+        <div class="hidden md:block">
+            <a href="pricing.html" class="bg-[#006B6B] text-white px-6 py-2.5 rounded-full font-bold hover:bg-teal-800 transition-all shadow-lg">
+                Book Now
+            </a>
+        </div>
+
+        <button onclick="document.getElementById('mobile-menu').classList.toggle('hidden')" class="md:hidden text-3xl text-[#006B6B]">
+            ☰
+        </button>
+    </div>
+
+    <div id="mobile-menu" class="hidden absolute top-20 left-0 w-full bg-white border-b border-slate-200 p-6 flex flex-col gap-6 text-lg font-bold shadow-xl">
+        <a href="index.html" class="text-slate-700">Home</a>
+        <a href="services.html" class="text-slate-700">Services</a>
+        <a href="pricing.html" class="text-slate-700">Pricing Calculator</a>
+        <a href="track.html" class="text-slate-700">Track Order</a>
+        <a href="franchise.html" class="text-slate-700">Franchise</a>
+        <a href="legal.html" class="text-slate-700">Policies</a>
+        <a href="pricing.html" class="text-[#006B6B]">Book Pickup Now</a>
+    </div>
+</nav>
+
+    <div class="max-w-3xl mx-auto px-6 py-20">
+        <h1 class="text-4xl font-display font-bold mb-2">Terms & Policies</h1>
+        <p class="text-slate-500 mb-12">Last Updated: February 2026</p>
+
+        <div class="space-y-12">
+            <section>
+                <h2 class="text-2xl font-bold mb-4 text-brand-dark">1. Damage Protection Policy</h2>
+                <div class="bg-white p-6 rounded-xl border border-slate-200 text-slate-600 leading-relaxed">
+                    <p>We exercise the utmost care in processing articles entrusted to us. However, we are not responsible for:</p>
+                    <ul class="list-disc ml-5 mt-2 space-y-2">
+                        <li>Color bleeding from non-fast fabrics.</li>
+                        <li>Shrinkage of fabrics that are not pre-shrunk.</li>
+                        <li>Damage to buttons, beads, or zippers (though we try to protect them).</li>
+                    </ul>
+                    <p class="mt-4 bg-yellow-50 p-4 rounded-lg border border-yellow-100 text-yellow-800"><strong>Guarantee:</strong> In case of loss or damage directly caused by our operational error, our liability is limited to <strong>10 times the processing charge</strong> of that individual item.</p>
+                </div>
+            </section>
+
+            <section>
+                <h2 class="text-2xl font-bold mb-4 text-brand-dark">2. Delivery Policy</h2>
+                <p class="text-slate-600 leading-relaxed">
+                    Standard delivery time is 24-48 hours. Express delivery (same day) is available at a 50% surcharge. We are not liable for delays caused by unforeseen circumstances (weather, strikes, etc.).
+                </p>
+            </section>
+
+            <section>
+                <h2 class="text-2xl font-bold mb-4 text-brand-dark">3. Re-Wash Policy</h2>
+                <p class="text-slate-600 leading-relaxed">
+                    If you are unsatisfied with the cleaning quality, you must notify us within <strong>24 hours of delivery</strong> and keep the item unused with tags intact. We will re-process the item free of charge.
+                </p>
+            </section>
+        </div>
+    </div>
+</body>
+</html>
